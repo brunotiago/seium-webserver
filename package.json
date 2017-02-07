@@ -1,0 +1,19 @@
+{
+  "name": "webscoket-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start-db": "./mongodb/bin/mongod --dbpath ./mongodb/data/db/",
+    "start-server": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "body-parser": "latest",
+    "mongoose": "latest",
+    "morgan": "latest",
+    "socket.io": "latest"
+  }
+}
