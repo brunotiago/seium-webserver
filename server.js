@@ -28,6 +28,7 @@ app.all('*', function (req, res, next) {
 	}
 });
 
+//Add some mocked events to the DB
 app.get('/setup', function (req, res) {
 	mockedEventData.forEach(function (mockedEvent) {
 		var newEvent = new Event(mockedEvent);
@@ -37,11 +38,9 @@ app.get('/setup', function (req, res) {
 	res.status(200).end();
 });
 
+//Delete all events from DB
 app.get('/delete', function (req, res) {
-	Event.remove({}, function (err, savedChat) {
-		console.log(err);
-		console.log(savedChat);
-	});
+	Event.remove({}, function(){});
 
 	res.status(200).end();
 });
@@ -94,7 +93,9 @@ app.delete('/events/:eventId', function (req, res) {
 	});
 });
 
+//WS connection handler
 io.sockets.on('connection', function (socket) {
+	//Handle client request to subscribe specific event updates
 	socket.on('SUBSCRIBE_EVENT', function (data) {
 		var eventId = data.eventId;
 		socket.join(eventId);
@@ -102,10 +103,11 @@ io.sockets.on('connection', function (socket) {
 		Event.findOne({
 			'eventId': data.eventId
 		}).exec(function (err, data) {
-			io.in(eventId).emit('EVENT_UPDATE', data);
+			socket.emit('EVENT_UPDATE', data);
 		});
 	});
 });
 
+//Start server at port 2015
 server.listen(2015);
 console.log('Server running at port 2015');
